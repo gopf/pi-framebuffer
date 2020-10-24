@@ -7,25 +7,34 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
-// application entry point
+/*
+ * Show device info for the given framebuffer device.
+ */
 int main(int argc, char* argv[])
 {
-  int fbfd = 0; // framebuffer filedescriptor
+  char *devicename;
+  int fbfd = 0;
   struct fb_var_screeninfo var_info;
 
-  // Open the framebuffer device file for reading and writing
-  fbfd = open("/dev/fb1", O_RDWR);
+  if (argc != 2) {
+    printf("Usage: %s <devicename>\n", argv[0]);
+    return 1;
+  }
+
+  devicename = argv[1];
+  fbfd = open(devicename, O_RDWR);
   if (fbfd == -1) {
-    printf("Error: cannot open framebuffer device.\n");
+    printf("Error: cannot open framebuffer device '%s'.\n", devicename);
     return(1);
   }
-  printf("The framebuffer device opened.\n");
 
   // Get variable screen information
   if (ioctl(fbfd, FBIOGET_VSCREENINFO, &var_info)) {
     printf("Error reading variable screen info.\n");
   }
-  printf("Display info %dx%d, %d bpp\n", 
+
+  printf("Display info for '%s': %dx%d, %d bpp\n", 
+         devicename,
          var_info.xres, var_info.yres, 
          var_info.bits_per_pixel );
 
