@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
         int b = 31 - r;
         int col = (r << 11) + (g << 5) + b;
 	// printf("%d %d %d\n", r, g, b);
-	pixels[y * vinfo.xres + x] = 0;
+	pixels[y * vinfo.xres + x] = col;
       }
     }
   }
